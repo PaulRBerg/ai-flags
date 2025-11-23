@@ -2,13 +2,13 @@
 
 from ai_flags.handlers.base import FlagHandler
 
-DEFAULT_CONTENT = """After you come up with the implementation plan, consider how to split the work among parallel subagents using the Task tool:
+DEFAULT_CONTENT = """Once you have an implementation plan, split the work strategically:
 
-- If the work can be fully parallelized (independent tasks with no dependencies), spawn multiple subagents in a single message with multiple Task tool calls
-- If the work must be done sequentially (each step depends on the previous), spawn a single subagent for the entire workflow
-- If you need to do some sequential work first before parallelizing, start with a subagent for that sequential portion, then spawn parallel subagents for the independent work afterwards
+- **Independent tasks**: Spawn multiple subagents in parallel using multiple Task tool calls in a single message
+- **Dependent tasks**: Use a single subagent for the entire sequential workflow
+- **Hybrid workflows**: Handle sequential prerequisites first, then parallelize independent work
 
-Delegate implementation details to subagents. Your role is to orchestrate, not implement directly."""
+Orchestrate, don't implement. Delegate all implementation details to subagents. Review their work at the end."""
 
 
 class SubagentHandler(FlagHandler):
