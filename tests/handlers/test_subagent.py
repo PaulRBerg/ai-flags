@@ -23,7 +23,7 @@ class TestSubagentHandler:
         assert len(content) > 0
         # Verify content has subagent-related keywords from original tests
         assert "implementation plan" in content.lower()
-        assert "parallel subagents" in content.lower()
+        assert "subagents in parallel" in content.lower()
 
     def test_empty_content_outside_plan_mode(self):
         """Should return empty string when not in plan mode."""

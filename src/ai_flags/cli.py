@@ -84,7 +84,7 @@ def _handle_hook_mode():
     try:
         # Extract prompt from hook input
         prompt = hook_input.get("prompt", "")
-        permission_mode = hook_input.get("permissionMode")
+        permission_mode = hook_input.get("permission_mode")
 
         # Load config
         config = load_config()

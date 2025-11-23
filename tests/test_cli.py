@@ -52,7 +52,7 @@ class TestHandleCommand:
 
     def test_hook_mode_valid_input(self, runner, temp_config):
         """Should process hook JSON input correctly."""
-        hook_input = {"prompt": "task -c", "permissionMode": "plan"}
+        hook_input = {"prompt": "task -c", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -89,7 +89,7 @@ class TestHandleCommand:
 
     def test_hook_mode_permission_mode_plan(self, runner, temp_config):
         """Should activate -s flag only in plan mode."""
-        hook_input = {"prompt": "task -s", "permissionMode": "plan"}
+        hook_input = {"prompt": "task -s", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -101,7 +101,7 @@ class TestHandleCommand:
 
     def test_hook_mode_permission_mode_normal(self, runner, temp_config):
         """Should skip -s flag when not in plan mode."""
-        hook_input = {"prompt": "task -s", "permissionMode": "normal"}
+        hook_input = {"prompt": "task -s", "permission_mode": "normal"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -135,7 +135,7 @@ class TestHandleCommand:
 
     def test_hook_mode_multiple_flags_all(self, runner, temp_config):
         """Test hook mode with multiple valid flags."""
-        hook_input = {"prompt": "my task -s -c -t", "permissionMode": "plan"}
+        hook_input = {"prompt": "my task -s -c -t", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -184,7 +184,7 @@ class TestHandleCommand:
 
     def test_hook_mode_all_recognized_flags(self, runner, temp_config):
         """Test hook mode with all recognized flags."""
-        hook_input = {"prompt": "my task -s -c -t -d -n", "permissionMode": "plan"}
+        hook_input = {"prompt": "my task -s -c -t -d -n", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -332,7 +332,7 @@ class TestEndToEndWorkflows:
 
     def test_all_flags_together(self, runner, temp_config):
         """Should handle all recognized flags together."""
-        hook_input = {"prompt": "task -s -c -t -d -n", "permissionMode": "plan"}
+        hook_input = {"prompt": "task -s -c -t -d -n", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -372,7 +372,7 @@ class TestEndToEndWorkflows:
         runner.invoke(cli, ["config", "set", "d", "disabled"])
 
         # Try to use mix of enabled and disabled flags
-        hook_input = {"prompt": "task -c -t -d", "permissionMode": "plan"}
+        hook_input = {"prompt": "task -c -t -d", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
 
@@ -387,7 +387,7 @@ class TestEndToEndWorkflows:
     def test_permission_mode_filtering(self, runner, temp_config):
         """Test that -s flag respects permission mode."""
         # Test with plan mode (should include -s)
-        hook_input_plan = {"prompt": "task -s -c", "permissionMode": "plan"}
+        hook_input_plan = {"prompt": "task -s -c", "permission_mode": "plan"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input_plan))
         assert result.exit_code == 0
 
@@ -397,7 +397,7 @@ class TestEndToEndWorkflows:
         assert "<commit_instructions>" in context
 
         # Test with normal mode (should skip -s)
-        hook_input_normal = {"prompt": "task -s -c", "permissionMode": "normal"}
+        hook_input_normal = {"prompt": "task -s -c", "permission_mode": "normal"}
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input_normal))
         assert result.exit_code == 0
 
@@ -410,7 +410,7 @@ class TestEndToEndWorkflows:
         """Should handle multiline prompts with trailing flags."""
         hook_input = {
             "prompt": "line 1\nline 2\nline 3 -c -t",
-            "permissionMode": "plan",
+            "permission_mode": "plan",
         }
         result = runner.invoke(cli, ["handle"], input=json.dumps(hook_input))
         assert result.exit_code == 0
