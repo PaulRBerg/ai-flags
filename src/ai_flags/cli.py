@@ -19,6 +19,7 @@ from ai_flags.handlers import (
     DebugHandler,
     NoLintHandler,
 )
+from ai_flags.logger import log_handle
 
 
 @click.group()
@@ -68,6 +69,9 @@ def _handle_hook_mode():
         hook_input = json.loads(stdin_content)
     except (json.JSONDecodeError, ValueError):
         # Invalid JSON (but not empty) - gracefully degrade for hooks
+        log_handle(
+            mode="hook", flags=[], cleaned_prompt="", success=False, error="Invalid JSON input"
+        )
         click.echo(
             json.dumps(
                 {
@@ -94,6 +98,7 @@ def _handle_hook_mode():
         result = parse_trailing_flags(prompt)
         if result is None:
             # No flags detected - output empty JSON
+            log_handle(mode="hook", flags=[], cleaned_prompt=prompt, success=True)
             click.echo(
                 json.dumps(
                     {
@@ -111,6 +116,13 @@ def _handle_hook_mode():
         # Validate flags
         if not validate_flags(flags, enabled_flags):
             # Invalid flags - silent exit (output empty JSON)
+            log_handle(
+                mode="hook",
+                flags=flags,
+                cleaned_prompt=cleaned_prompt,
+                success=False,
+                error="Invalid or disabled flags",
+            )
             click.echo(
                 json.dumps(
                     {
@@ -131,6 +143,7 @@ def _handle_hook_mode():
 
         # If no context generated (e.g., -s filtered in normal mode), return empty
         if not context:
+            log_handle(mode="hook", flags=flags, cleaned_prompt=cleaned_prompt, success=True)
             click.echo(
                 json.dumps(
                     {
@@ -146,9 +159,11 @@ def _handle_hook_mode():
         # Format and output
         output = format_hook_output(cleaned_prompt, flags, context)
         click.echo(output)
+        log_handle(mode="hook", flags=flags, cleaned_prompt=cleaned_prompt, success=True)
 
-    except Exception:
+    except Exception as e:
         # On error, output empty JSON (graceful degradation)
+        log_handle(mode="hook", flags=[], cleaned_prompt="", success=False, error=str(e))
         click.echo(
             json.dumps(
                 {
@@ -172,6 +187,9 @@ def _handle_cli_mode(prompt: str):
     # Parse flags
     result = parse_trailing_flags(prompt)
     if result is None:
+        log_handle(
+            mode="cli", flags=[], cleaned_prompt=prompt, success=False, error="No flags detected"
+        )
         click.echo("Error: No flags detected in prompt", err=True)
         sys.exit(1)
 
@@ -179,6 +197,13 @@ def _handle_cli_mode(prompt: str):
 
     # Validate flags
     if not validate_flags(flags, enabled_flags):
+        log_handle(
+            mode="cli",
+            flags=flags,
+            cleaned_prompt=cleaned_prompt,
+            success=False,
+            error="Invalid or disabled flags",
+        )
         click.echo("Error: Invalid or disabled flags detected", err=True)
         sys.exit(1)
 
@@ -191,6 +216,7 @@ def _handle_cli_mode(prompt: str):
     # Format and output
     output = format_cli_output(cleaned_prompt, flags, context)
     click.echo(output)
+    log_handle(mode="cli", flags=flags, cleaned_prompt=cleaned_prompt, success=True)
 
 
 def _build_handlers(config):
