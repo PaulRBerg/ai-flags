@@ -34,7 +34,7 @@ cd ai-flags
 just install-cli
 
 # Verify installation
-ai-flags --version
+ai-flags --help
 ```
 
 **Note**: Claude Code hooks require global installation to make the `ai-flags` command available system-wide.
