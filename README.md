@@ -1,5 +1,8 @@
 # ai-flags
 
+> [!WARNING]
+> This project is no longer maintained. I'm now using [Raycast Snippets](https://manual.raycast.com/snippets) for storing prompt templates.
+
 Parse and process Claude Code prompt flags to inject contextual instructions into AI conversations.
 
 ## Motivation
