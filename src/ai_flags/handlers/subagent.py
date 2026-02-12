@@ -2,13 +2,12 @@
 
 from ai_flags.handlers.base import FlagHandler
 
-DEFAULT_CONTENT = """Once you have an implementation plan, split the work strategically:
+DEFAULT_CONTENT = """Split work strategically:
+- **Independent**: Spawn parallel subagents via multiple Task calls in one message
+- **Dependent**: Use one subagent for the full sequential workflow
+- **Hybrid**: Handle prerequisites first, then parallelize
 
-- **Independent tasks**: Spawn multiple subagents in parallel using multiple Task tool calls in a single message
-- **Dependent tasks**: Use a single subagent for the entire sequential workflow
-- **Hybrid workflows**: Handle sequential prerequisites first, then parallelize independent work
-
-Orchestrate, don't implement. Delegate all implementation details to subagents. Review their work at the end."""
+Orchestrate, don't implement. Delegate to subagents. Review their work."""
 
 
 class SubagentHandler(FlagHandler):
@@ -23,7 +22,7 @@ class SubagentHandler(FlagHandler):
         return "s"
 
     def get_xml_tag(self) -> str:
-        return "subagent_delegation"
+        return "subagents"
 
     def get_content(self, permission_mode: str | None = None) -> str:
         """Return subagent delegation instructions.
